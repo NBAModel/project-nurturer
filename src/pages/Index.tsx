@@ -195,9 +195,9 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="layout-container flex flex-1 overflow-hidden">
         {/* Calendar Section */}
-        <div className="flex-1 min-w-0 flex flex-col overflow-hidden">
+        <div className="calendar-section min-w-0 flex flex-col overflow-hidden">
           {/* Calendar Grid */}
           <div className="flex-1 overflow-auto bg-card">
             {isLoading ? (
@@ -219,7 +219,7 @@ const Index = () => {
         </div>
 
         {/* Sidebar */}
-        <div className="w-80 sm:w-96 flex-shrink-0">
+        <div className="sidebar-section flex-shrink-0">
           {isLoading ? (
             <div className="flex items-center justify-center h-full bg-sidebar">
               <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
