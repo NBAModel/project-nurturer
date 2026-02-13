@@ -170,15 +170,21 @@
   height: 100%;
 }
 
-/* Tall/narrow screens (height > 2x width): stack vertically */
-@media (max-aspect-ratio: 1/2) {
+/* Narrow screens (phone): stack vertically and scroll */
+@media (max-width: 640px) {
   .layout-container {
     flex-direction: column;
+    overflow-y: auto;
+  }
+
+  .calendar-section {
+    flex: none;
   }
 
   .sidebar-section {
     width: 100%;
-    height: 50vh;
+    height: auto;
+    min-height: 60vh;
     flex-shrink: 0;
   }
 }
