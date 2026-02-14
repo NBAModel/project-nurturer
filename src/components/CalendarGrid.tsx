@@ -56,7 +56,7 @@ export function CalendarGrid({
       </div>
       
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-3 flex-1 calendar-cells-grid justify-items-center">
+      <div className="grid grid-cols-7 gap-3 flex-1 calendar-cells-grid">
         {days.map((date, index) => {
           const dayProgress = getDayProgress(tasks, completions, date, today, skips);
           const isSelected = date.getTime() === selectedDate.getTime();
