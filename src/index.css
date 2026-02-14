@@ -153,7 +153,7 @@
 
 /* Calendar day cells: constrain width to max 1.5x height only when cells are wider than tall */
 .calendar-cells-grid > button {
-  max-aspect-ratio: 3 / 2;
+  max-aspect-ratio: 5 / 4;
 }
 
 /* Default: side-by-side layout, sidebar has fixed width */
