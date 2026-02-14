@@ -151,9 +151,9 @@
   }
 }
 
-/* Calendar day cells: constrain width to max 1.5x height only when cells are wider than tall */
+/* Calendar day cells: prefer square-ish cells, won't stretch wider than 5:4 */
 .calendar-cells-grid > button {
-  max-aspect-ratio: 5 / 4;
+  aspect-ratio: 5 / 4;
 }
 
 /* Default: side-by-side layout, sidebar has fixed width */
