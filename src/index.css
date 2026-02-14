@@ -167,6 +167,7 @@
 
 .sidebar-section {
   width: 24rem;
+  flex-grow: 1;
   height: 100%;
 }
 
