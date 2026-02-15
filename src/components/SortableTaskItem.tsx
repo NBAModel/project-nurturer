@@ -1,11 +1,11 @@
+import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Check, Repeat, Calendar, FileText } from 'lucide-react';
+import { GripVertical, Check, Repeat, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Task } from '@/hooks/useTasks';
 import { EditTaskDialog } from './EditTaskDialog';
 import { DeleteTaskDialog } from './DeleteTaskDialog';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 
 interface SortableTaskItemProps {
@@ -38,6 +38,7 @@ export function SortableTaskItem({
   canComplete,
   isPast,
 }: SortableTaskItemProps) {
+  const [showDescription, setShowDescription] = useState(false);
   const {
     attributes,
     listeners,
@@ -69,94 +70,94 @@ export function SortableTaskItem({
       style={style}
       className={cn(
         "group w-full max-w-full min-w-0 rounded-lg border p-3 transition-all duration-200",
-        "grid grid-cols-[auto,auto,minmax(0,1fr),auto] items-start gap-2",
         isCompleted
           ? "bg-task-complete-bg border-task-complete-border"
           : "bg-card border-border hover:border-primary/30",
         isDragging && "opacity-50 shadow-lg z-50",
       )}
     >
-      {/* Drag handle */}
-      <button
-        {...attributes}
-        {...listeners}
-        className="flex-shrink-0 self-start w-6 h-6 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-grab active:cursor-grabbing touch-none"
-      >
-        <GripVertical className="w-4 h-4" />
-      </button>
+      <div className="grid grid-cols-[auto,auto,minmax(0,1fr),auto] items-start gap-2">
+        {/* Drag handle */}
+        <button
+          {...attributes}
+          {...listeners}
+          className="flex-shrink-0 self-start w-6 h-6 flex items-center justify-center text-muted-foreground/50 hover:text-muted-foreground cursor-grab active:cursor-grabbing touch-none"
+        >
+          <GripVertical className="w-4 h-4" />
+        </button>
 
-      {/* Completion toggle */}
-      <button
-        onClick={onToggle}
-        disabled={!canComplete}
-        className={cn(
-          "flex-shrink-0 self-start w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-          isCompleted
-            ? "bg-task-complete-border border-task-complete-border text-primary-foreground"
-            : "border-muted-foreground/30 hover:border-primary",
-          !canComplete && "opacity-50 cursor-not-allowed",
-        )}
-      >
-        {isCompleted && <Check className="w-4 h-4" />}
-      </button>
-
-      {/* Task content */}
-      <div className="min-w-0">
-        <p
+        {/* Completion toggle */}
+        <button
+          onClick={onToggle}
+          disabled={!canComplete}
           className={cn(
-            "font-medium leading-snug break-words whitespace-normal transition-all duration-200",
-            isCompleted && "line-through text-muted-foreground",
+            "flex-shrink-0 self-start w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+            isCompleted
+              ? "bg-task-complete-border border-task-complete-border text-primary-foreground"
+              : "border-muted-foreground/30 hover:border-primary",
+            !canComplete && "opacity-50 cursor-not-allowed",
           )}
         >
-          {task.title}
+          {isCompleted && <Check className="w-4 h-4" />}
+        </button>
+
+        {/* Task content */}
+        <div className="min-w-0">
+          <p
+            className={cn(
+              "font-medium leading-snug break-words whitespace-normal transition-all duration-200",
+              isCompleted && "line-through text-muted-foreground",
+            )}
+          >
+            {task.title}
+          </p>
+
+          {repeatLabel && (
+            <div className="flex min-w-0 items-start gap-1 mt-1">
+              <Repeat className="mt-0.5 w-3 h-3 flex-shrink-0 text-muted-foreground" />
+              <span className="min-w-0 flex-1 text-xs leading-snug text-muted-foreground break-words whitespace-normal">
+                {repeatLabel}
+              </span>
+            </div>
+          )}
+
+          {task.repeat_type === 'none' && (
+            <div className="flex min-w-0 items-start gap-1 mt-1">
+              <Calendar className="mt-0.5 w-3 h-3 flex-shrink-0 text-muted-foreground" />
+              <span className="min-w-0 flex-1 text-xs leading-snug text-muted-foreground break-words whitespace-normal">
+                One-time
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-shrink-0 self-start gap-1">
+          {task.description && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="flex-shrink-0 self-start h-8 w-8 text-muted-foreground hover:text-primary"
+              onClick={() => setShowDescription(!showDescription)}
+            >
+              {showDescription ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </Button>
+          )}
+          <EditTaskDialog task={task} onEdit={onEdit} />
+          <DeleteTaskDialog
+            task={task}
+            onDeleteAll={onDeleteAll}
+            onEndTask={onEndTask}
+            onDeleteToday={onDeleteToday}
+          />
+        </div>
+      </div>
+
+      {showDescription && task.description && (
+        <p className="mt-2 leading-snug break-words whitespace-normal text-muted-foreground">
+          {task.description}
         </p>
-
-
-        {repeatLabel && (
-          <div className="flex min-w-0 items-start gap-1 mt-1">
-            <Repeat className="mt-0.5 w-3 h-3 flex-shrink-0 text-muted-foreground" />
-            <span className="min-w-0 flex-1 text-xs leading-snug text-muted-foreground break-words whitespace-normal">
-              {repeatLabel}
-            </span>
-          </div>
-        )}
-
-        {task.repeat_type === 'none' && (
-          <div className="flex min-w-0 items-start gap-1 mt-1">
-            <Calendar className="mt-0.5 w-3 h-3 flex-shrink-0 text-muted-foreground" />
-            <span className="min-w-0 flex-1 text-xs leading-snug text-muted-foreground break-words whitespace-normal">
-              One-time
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div className="flex flex-shrink-0 self-start gap-1">
-        {task.description && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="flex-shrink-0 self-start h-8 w-8 text-muted-foreground hover:text-primary"
-              >
-                <FileText className="w-4 h-4" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-72 bg-popover z-50">
-              <p className="leading-snug break-words whitespace-normal">{task.description}</p>
-            </PopoverContent>
-          </Popover>
-        )}
-        <EditTaskDialog task={task} onEdit={onEdit} />
-        <DeleteTaskDialog
-          task={task}
-          onDeleteAll={onDeleteAll}
-          onEndTask={onEndTask}
-          onDeleteToday={onDeleteToday}
-        />
-      </div>
+      )}
     </div>
   );
 }
