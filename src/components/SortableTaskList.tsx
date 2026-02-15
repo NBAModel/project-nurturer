@@ -29,6 +29,7 @@ interface SortableTaskListProps {
   onDeleteToday: (taskId: string) => void;
   onEdit: (taskId: string, updates: {
     title: string;
+    description?: string | null;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number | null;
   }) => void;

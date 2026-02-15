@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -24,6 +25,7 @@ interface EditTaskDialogProps {
   task: Task;
   onEdit: (taskId: string, updates: {
     title: string;
+    description?: string | null;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number | null;
   }) => void;
@@ -34,6 +36,7 @@ const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 export function EditTaskDialog({ task, onEdit }: EditTaskDialogProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState(task.title);
+  const [description, setDescription] = useState(task.description || '');
   const [repeatType, setRepeatType] = useState<'none' | 'daily' | 'weekly' | 'fortnightly'>(task.repeat_type);
 
   const startDayOfWeek = getDay(parseISO(task.start_date));
@@ -42,6 +45,7 @@ export function EditTaskDialog({ task, onEdit }: EditTaskDialogProps) {
   useEffect(() => {
     if (open) {
       setTitle(task.title);
+      setDescription(task.description || '');
       setRepeatType(task.repeat_type);
     }
   }, [open, task]);
@@ -52,8 +56,8 @@ export function EditTaskDialog({ task, onEdit }: EditTaskDialogProps) {
 
     onEdit(task.id, {
       title: title.trim(),
+      description: description.trim() || null,
       repeat_type: repeatType,
-      // For weekly, use the start date's day of week
       repeat_day: repeatType === 'weekly' ? startDayOfWeek : null,
     });
 
@@ -84,6 +88,17 @@ export function EditTaskDialog({ task, onEdit }: EditTaskDialogProps) {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter task title..."
               autoFocus
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="edit-description">Description (optional)</Label>
+            <Textarea
+              id="edit-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add a description..."
+              rows={2}
             />
           </div>
 

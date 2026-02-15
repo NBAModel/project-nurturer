@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -23,6 +24,7 @@ interface AddTaskDialogProps {
   selectedDate: Date;
   onAdd: (task: {
     title: string;
+    description?: string;
     start_date: string;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number;
@@ -34,6 +36,7 @@ const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 export function AddTaskDialog({ selectedDate, onAdd }: AddTaskDialogProps) {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
   const [repeatType, setRepeatType] = useState<'none' | 'daily' | 'weekly' | 'fortnightly'>('none');
 
   const startDayOfWeek = getDay(selectedDate);
@@ -44,13 +47,14 @@ export function AddTaskDialog({ selectedDate, onAdd }: AddTaskDialogProps) {
 
     onAdd({
       title: title.trim(),
+      description: description.trim() || undefined,
       start_date: format(selectedDate, 'yyyy-MM-dd'),
       repeat_type: repeatType,
-      // For weekly, use the start date's day of week
       ...(repeatType === 'weekly' && { repeat_day: startDayOfWeek }),
     });
 
     setTitle('');
+    setDescription('');
     setRepeatType('none');
     setOpen(false);
   };
@@ -76,6 +80,17 @@ export function AddTaskDialog({ selectedDate, onAdd }: AddTaskDialogProps) {
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter task title..."
               autoFocus
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Description (optional)</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Add a description..."
+              rows={2}
             />
           </div>
 
