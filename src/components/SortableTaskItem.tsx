@@ -15,6 +15,7 @@ interface SortableTaskItemProps {
   onDeleteToday: () => void;
   onEdit: (taskId: string, updates: {
     title: string;
+    description?: string | null;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number | null;
   }) => void;
@@ -107,6 +108,15 @@ export function SortableTaskItem({
         >
           {task.title}
         </p>
+
+        {task.description && (
+          <p className={cn(
+            "text-xs text-muted-foreground mt-0.5 break-words whitespace-normal",
+            isCompleted && "line-through"
+          )}>
+            {task.description}
+          </p>
+        )}
 
         {repeatLabel && (
           <div className="flex min-w-0 items-start gap-1 mt-1">

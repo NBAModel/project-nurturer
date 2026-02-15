@@ -5,6 +5,7 @@ import { format, isAfter, isSameDay, getDay, parseISO, differenceInDays } from '
 export interface Task {
   id: string;
   title: string;
+  description: string | null;
   created_at: string;
   start_date: string;
   end_date: string | null;
@@ -98,6 +99,7 @@ export function useAddTask() {
   return useMutation({
     mutationFn: async (task: {
       title: string;
+      description?: string;
       start_date: string;
       repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
       repeat_day?: number;
@@ -125,6 +127,7 @@ export function useUpdateTask() {
       taskId: string;
       updates: {
         title: string;
+        description?: string | null;
         repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
         repeat_day?: number | null;
       };
@@ -133,6 +136,7 @@ export function useUpdateTask() {
         .from('tasks')
         .update({
           title: updates.title,
+          description: updates.description ?? null,
           repeat_type: updates.repeat_type,
           repeat_day: updates.repeat_day,
         })

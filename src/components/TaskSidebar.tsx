@@ -13,6 +13,7 @@ interface TaskSidebarProps {
   skips: TaskSkip[];
   onAddTask: (task: {
     title: string;
+    description?: string;
     start_date: string;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number;
@@ -23,6 +24,7 @@ interface TaskSidebarProps {
   onSkipTaskForToday: (taskId: string) => void;
   onEditTask: (taskId: string, updates: {
     title: string;
+    description?: string | null;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number | null;
   }) => void;

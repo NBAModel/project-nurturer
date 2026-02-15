@@ -69,6 +69,7 @@ const Index = () => {
 
   const handleAddTask = (task: {
     title: string;
+    description?: string;
     start_date: string;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number;
@@ -103,6 +104,7 @@ const Index = () => {
 
   const handleEditTask = (taskId: string, updates: {
     title: string;
+    description?: string | null;
     repeat_type: 'none' | 'daily' | 'weekly' | 'fortnightly';
     repeat_day?: number | null;
   }) => {
