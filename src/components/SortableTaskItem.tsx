@@ -1,10 +1,12 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Check, Repeat, Calendar } from 'lucide-react';
+import { GripVertical, Check, Repeat, Calendar, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Task } from '@/hooks/useTasks';
 import { EditTaskDialog } from './EditTaskDialog';
 import { DeleteTaskDialog } from './DeleteTaskDialog';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
 
 interface SortableTaskItemProps {
   task: Task;
@@ -109,14 +111,6 @@ export function SortableTaskItem({
           {task.title}
         </p>
 
-        {task.description && (
-          <p className={cn(
-            "text-xs text-muted-foreground mt-0.5 break-words whitespace-normal",
-            isCompleted && "line-through"
-          )}>
-            {task.description}
-          </p>
-        )}
 
         {repeatLabel && (
           <div className="flex min-w-0 items-start gap-1 mt-1">
@@ -139,6 +133,22 @@ export function SortableTaskItem({
 
       {/* Actions */}
       <div className="flex flex-shrink-0 self-start gap-1">
+        {task.description && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex-shrink-0 self-start h-8 w-8 text-muted-foreground hover:text-primary"
+              >
+                <FileText className="w-4 h-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 bg-popover z-50">
+              <p className="leading-snug break-words whitespace-normal">{task.description}</p>
+            </PopoverContent>
+          </Popover>
+        )}
         <EditTaskDialog task={task} onEdit={onEdit} />
         <DeleteTaskDialog
           task={task}
