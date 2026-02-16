@@ -24,6 +24,20 @@ interface TaskItemProps {
 
 const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+function renderDescriptionWithLinks(text: string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = text.split(urlRegex);
+  return parts.map((part, i) =>
+    urlRegex.test(part) ? (
+      <a key={i} href={part} target="_blank" rel="noopener noreferrer" className="text-primary underline hover:text-primary/80">
+        {part}
+      </a>
+    ) : (
+      part
+    )
+  );
+}
+
 export function TaskItem({ task, isCompleted, onToggle, onDeleteAll, onEndTask, onDeleteToday, onEdit, canComplete }: TaskItemProps) {
   const [showDescription, setShowDescription] = useState(false);
 
@@ -114,7 +128,7 @@ export function TaskItem({ task, isCompleted, onToggle, onDeleteAll, onEndTask, 
 
       {showDescription && task.description && (
         <p className="mt-2 leading-snug break-all whitespace-pre-wrap text-muted-foreground">
-          {task.description}
+          {renderDescriptionWithLinks(task.description)}
         </p>
       )}
     </div>
