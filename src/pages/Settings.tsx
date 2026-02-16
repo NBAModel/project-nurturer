@@ -54,16 +54,14 @@ const Settings = () => {
   const handleDeleteAccount = async () => {
     setDeletingAccount(true);
     try {
-      // Delete all user data first
-      await supabase.from('task_completions').delete().neq('id', '');
-      await supabase.from('task_skips').delete().neq('id', '');
-      await supabase.from('tasks').delete().neq('id', '');
+      // Delete tasks - cascade handles completions and skips
+      const { error } = await supabase.from('tasks').delete().neq('id', '');
+      if (error) throw new Error('Failed to delete account data');
       
-      // Sign out after deleting data
       await signOut();
       toast.success('Account data deleted. Contact support to fully remove your account.');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch {
+      toast.error('Unable to delete account data. Please contact support.');
     } finally {
       setDeletingAccount(false);
     }
