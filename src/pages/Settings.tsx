@@ -84,6 +84,15 @@ const Settings = () => {
             <p className="text-sm text-foreground">{user?.email}</p>
           </div>
 
+          {/* Sign Out */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Session</h2>
+            <Button variant="outline" className="w-full gap-2" onClick={signOut}>
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </Button>
+          </div>
+
           {/* Change Password */}
           <div className="space-y-3">
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Change Password</h2>
@@ -117,15 +126,6 @@ const Settings = () => {
                 Update Password
               </Button>
             </form>
-          </div>
-
-          {/* Sign Out */}
-          <div className="space-y-3">
-            <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Session</h2>
-            <Button variant="outline" className="w-full gap-2" onClick={signOut}>
-              <LogOut className="w-4 h-4" />
-              Sign Out
-            </Button>
           </div>
 
           {/* Delete Account */}
