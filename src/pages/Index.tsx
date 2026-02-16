@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { startOfDay, startOfWeek, parseISO, format } from 'date-fns';
-import { Loader2, Lock, Unlock, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Loader2, Lock, Unlock, ChevronLeft, ChevronRight, Settings } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { CalendarGrid } from '@/components/CalendarGrid';
 import { TaskSidebar } from '@/components/TaskSidebar';
@@ -9,7 +9,7 @@ import { useTasks, useTaskCompletions, useTaskSkips, useAddTask, useDeleteTask, 
 import { toast } from 'sonner';
 
 const Index = () => {
-  const { signOut } = useAuth();
+  const navigate = useNavigate();
   const today = useMemo(() => startOfDay(new Date()), []);
   const [selectedDate, setSelectedDate] = useState(today);
   const [isCalendarLocked, setIsCalendarLocked] = useState(true);
@@ -187,11 +187,11 @@ const Index = () => {
           <Button
             variant="ghost"
             size="icon"
-            onClick={signOut}
+            onClick={() => navigate('/settings')}
             className="h-8 w-8"
-            title="Sign out"
+            title="Settings"
           >
-            <LogOut className="h-4 w-4" />
+            <Settings className="h-4 w-4" />
           </Button>
         </div>
       </header>

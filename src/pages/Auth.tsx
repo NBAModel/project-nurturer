@@ -14,6 +14,8 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
 
   if (loading) {
     return (
@@ -32,7 +34,14 @@ const Auth = () => {
     setSubmitting(true);
 
     try {
-      if (isLogin) {
+      if (forgotPassword) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/settings`,
+        });
+        if (error) throw error;
+        setResetSent(true);
+        toast.success('Check your email for a password reset link');
+      } else if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success('Welcome back!');
@@ -58,7 +67,7 @@ const Auth = () => {
         <div className="text-center space-y-2">
           <h1 className="text-2xl font-bold text-foreground">Task Calendar</h1>
           <p className="text-muted-foreground text-sm">
-            {isLogin ? 'Sign in to your account' : 'Create a new account'}
+            {forgotPassword ? 'Enter your email to reset your password' : isLogin ? 'Sign in to your account' : 'Create a new account'}
           </p>
         </div>
 
@@ -74,33 +83,59 @@ const Auth = () => {
               required
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
-          <Button type="submit" className="w-full" disabled={submitting}>
+          {!forgotPassword && (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
+          )}
+          <Button type="submit" className="w-full" disabled={submitting || (forgotPassword && resetSent)}>
             {submitting && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-            {isLogin ? 'Sign In' : 'Sign Up'}
+            {forgotPassword ? (resetSent ? 'Email Sent' : 'Send Reset Link') : isLogin ? 'Sign In' : 'Sign Up'}
           </Button>
         </form>
 
+        {isLogin && !forgotPassword && (
+          <p className="text-center text-sm">
+            <button
+              type="button"
+              onClick={() => { setForgotPassword(true); setResetSent(false); }}
+              className="text-muted-foreground hover:text-primary hover:underline"
+            >
+              Forgot your password?
+            </button>
+          </p>
+        )}
+
         <p className="text-center text-sm text-muted-foreground">
-          {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
-          <button
-            type="button"
-            onClick={() => setIsLogin(!isLogin)}
-            className="text-primary hover:underline font-medium"
-          >
-            {isLogin ? 'Sign Up' : 'Sign In'}
-          </button>
+          {forgotPassword ? (
+            <button
+              type="button"
+              onClick={() => setForgotPassword(false)}
+              className="text-primary hover:underline font-medium"
+            >
+              Back to Sign In
+            </button>
+          ) : (
+            <>
+              {isLogin ? "Don't have an account?" : 'Already have an account?'}{' '}
+              <button
+                type="button"
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-primary hover:underline font-medium"
+              >
+                {isLogin ? 'Sign Up' : 'Sign In'}
+              </button>
+            </>
+          )}
         </p>
       </div>
     </div>
