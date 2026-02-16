@@ -113,7 +113,7 @@ export function TaskItem({ task, isCompleted, onToggle, onDeleteAll, onEndTask, 
       </div>
 
       {showDescription && task.description && (
-        <p className="mt-2 leading-snug break-words whitespace-normal text-muted-foreground">
+        <p className="mt-2 leading-snug break-words whitespace-pre-wrap text-muted-foreground">
           {task.description}
         </p>
       )}
