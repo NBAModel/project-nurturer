@@ -99,6 +99,7 @@ export function EditTaskDialog({ task, onEdit }: EditTaskDialogProps) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Add a description..."
               rows={2}
+              maxLength={5000}
             />
           </div>
 
