@@ -41,7 +41,7 @@ export function TaskItem({ task, isCompleted, onToggle, onDeleteAll, onEndTask, 
   return (
     <div
       className={cn(
-        "group w-full max-w-full min-w-0 rounded-lg border p-3 transition-all duration-200",
+        "group w-full max-w-full min-w-0 overflow-hidden rounded-lg border p-3 transition-all duration-200",
         isCompleted
           ? "bg-task-complete-bg border-task-complete-border"
           : "bg-card border-border hover:border-primary/30",
@@ -113,7 +113,7 @@ export function TaskItem({ task, isCompleted, onToggle, onDeleteAll, onEndTask, 
       </div>
 
       {showDescription && task.description && (
-        <p className="mt-2 leading-snug break-words whitespace-pre-wrap text-muted-foreground">
+        <p className="mt-2 leading-snug break-all whitespace-pre-wrap text-muted-foreground">
           {task.description}
         </p>
       )}
